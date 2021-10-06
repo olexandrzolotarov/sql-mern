@@ -87,12 +87,12 @@ router.post(
             }
 
             const token = jwt.sign(
-                { personID: user.personID },
+                { id: user.id },
                 config.get('jwtSecret'),
                 { expiresIn: '1h' }
             );
             res.cookie('token', `Bearer ${token}`)
-            res.json({ token: 'Bearer ' + token, personID: user.personID });
+            res.json({ token: 'Bearer ' + token, id: user.id });
         } catch (e) {
             res.status(500).json({ message: 'Something went wrong, try again!', e});
         }
@@ -105,7 +105,7 @@ router.get(
     (req, res) => {
         try {
             res.json({ 
-                personID: req.user.user.personID,
+                id: req.user.user.id,
                 login: req.user.user.login,
                 name: req.user.user.name,
                 last_name: req.user.user.last_name,

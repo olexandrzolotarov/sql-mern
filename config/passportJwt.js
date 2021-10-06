@@ -12,10 +12,10 @@ opts.secretOrKey = keys.jwtSecret;
 module.exports = passport => {
     passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
         try {
-            let sqlCheckLogin = `SELECT * FROM users WHERE personID = '${jwt_payload.personID}'`;
+            let sqlCheckLogin = `SELECT * FROM users WHERE id = '${jwt_payload.id}'`;
             const connection = await mysql.createConnection(mysqlConnectionData);
             const [ user, fields ] = (await connection.execute(sqlCheckLogin))[0];
-            if(user.personID) {
+            if(user.id) {
                 return done(null, {user: user});
             }
             return done(null, false);
