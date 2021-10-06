@@ -91,24 +91,34 @@ router.post(
                 config.get('jwtSecret'),
                 { expiresIn: '1h' }
             );
-
-            res.json({ token: 'Bearer ' + token, personID: user.personID })
+            res.cookie('token', `Bearer ${token}`)
+            res.json({ token: 'Bearer ' + token, personID: user.personID });
         } catch (e) {
-            res.status(500).json({ message: 'Something went wrong, try again!', e})
+            res.status(500).json({ message: 'Something went wrong, try again!', e});
         }
     }
 );
 
 router.get(
     '/dashboard',
-    passport.authenticate('jwt', {session: false}),
+    passport.authenticate('cookie', {session: false}),
     (req, res) => {
-        res.send('dashboard')
-        // try {
-        //     res.send('dashboard')
-        // } catch (error) {
-        //     res.status(500).json({ message: 'Something went wrong, try again!', error})
-        // }
+        try {
+            res.json({ 
+                personID: req.user.user.personID,
+                login: req.user.user.login,
+                name: req.user.user.name,
+                last_name: req.user.user.last_name,
+                followed: req.user.user.followed,
+                photo: req.user.user.photo,
+                date_of_birth: req.user.user.date_of_birth,
+                city: req.user.user.city,
+                education: req.user.user.education,
+                web_site: req.user.user.web_site
+            })
+        } catch (error) {
+            res.status(500).json({ message: 'Something went wrong, try again!', error})
+        }
     }
 );
 

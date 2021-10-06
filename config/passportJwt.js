@@ -4,6 +4,7 @@ const keys = require('./default.json');
 const mysqlConnectionData = require('./mysqlConnectionData');
 const mysql = require("mysql2/promise");
 
+
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = keys.jwtSecret;
@@ -15,7 +16,7 @@ module.exports = passport => {
             const connection = await mysql.createConnection(mysqlConnectionData);
             const [ user, fields ] = (await connection.execute(sqlCheckLogin))[0];
             if(user.personID) {
-                return done(null, {user: 'user'});
+                return done(null, {user: user});
             }
             return done(null, false);
         } catch (error) {
@@ -23,3 +24,4 @@ module.exports = passport => {
         }
     }))
 }
+

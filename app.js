@@ -1,17 +1,27 @@
 const express = require('express');
 const config = require('config');
-const bodyParser = require('body-parser');
 const passport = require('passport');
+const cookieParser = require('cookie-parser');
+
+
 
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 
 app.use(passport.initialize());
 
-require('./config/passport')(passport);
+// require('./config/passportJwt')(passport);
+require('./config/passportCookie')(passport);
+
+
+
+app.get('/', function (req, res) {
+    res.json({ msg: 'token received!' })
+  })
 
 app.use('/api/auth', require('./routes/auth.routes'));
 
